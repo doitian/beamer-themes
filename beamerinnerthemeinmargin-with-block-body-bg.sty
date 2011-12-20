@@ -19,11 +19,13 @@
 \setlength\leftmarginii{1.5ex}
 \setlength\leftmarginiii{1.5ex}
 
-\newenvironment{beamer@nomargin}{%
+\newenvironment{beamer@nomargin}[1][block body]{%
   \hskip-.20\paperwidth%
-  \begin{beamercolorbox}[wd=0.9\paperwidth]{sidebar}%
+  \begin{beamercolorbox}[wd=0.9\paperwidth]{#1}%
     \setlength{\linewidth}{0.88\paperwidth}%
+    \vskip-.9ex%
 }{%
+    \vskip-.25ex%
   \end{beamercolorbox}%
 }
 
@@ -93,11 +95,11 @@
 {
   \par\vskip\medskipamount%
   \leavevmode%
-  \beamer@putleft{\normalfont{\usebeamercolor[fg]{block title}\usebeamerfont*{block title}\insertblocktitle}}{2.5ex}%
+  \beamer@putleft{\normalfont{\usebeamercolor[fg]{block title}\usebeamerfont*{block title}\insertblocktitle}}{3ex}%
   \beamer@putright\usebeamercolor[fg]{block body}%
   \usebeamerfont{block body}%
   \ifbeamercolorempty[bg]{block body}{\vskip-1.75ex}{\vskip-2ex}%
-  \begin{beamercolorbox}[colsep*=.70ex,vmode]{block body}%
+  \begin{beamercolorbox}[colsep*=.75ex,vmode]{block body}%
     \ifbeamercolorempty[bg]{block body}{}{\vskip-.25ex}%
 }
 
@@ -112,7 +114,7 @@
 {
   \par\vskip\medskipamount%
   \leavevmode%
-  \beamer@putleft{\normalfont{\usebeamercolor[fg]{block title alerted}\usebeamerfont*{block title alerted}\insertblocktitle}}{2.5ex}%
+  \beamer@putleft{\normalfont{\usebeamercolor[fg]{block title alerted}\usebeamerfont*{block title alerted}\insertblocktitle}}{3ex}%
   \beamer@putright\usebeamercolor{block body alerted}%
   \usebeamerfont{block body alerted}%
   \ifbeamercolorempty[bg]{block body alerted}{\vskip-1.75ex}{\vskip-2ex}%
@@ -130,7 +132,7 @@
 {
   \par\vskip\medskipamount%
   \leavevmode%
-  \beamer@putleft{\normalfont{\usebeamercolor[fg]{block title example}\usebeamerfont*{block title example}\insertblocktitle}}{2.5ex}%
+  \beamer@putleft{\normalfont{\usebeamercolor[fg]{block title example}\usebeamerfont*{block title example}\insertblocktitle}}{3ex}%
   \beamer@putright\usebeamercolor{block body example}%
   \usebeamerfont{block body example}%
   \ifbeamercolorempty[bg]{block body example}{\vskip-1.75ex}{\vskip-2ex}%
@@ -152,7 +154,7 @@
   \addtobeamertemplate{itemize item}{\llap\bgroup}{\normalsize\kern1.5ex\egroup}
   \addtobeamertemplate{itemize subitem}{\llap\bgroup}{\normalsize\kern1.125ex\kern\leftmarginii\egroup}
   \addtobeamertemplate{itemize subsubitem}{\llap\bgroup}{\small\kern0.75ex\kern\leftmarginii\kern\leftmarginiii\egroup}
-  \addtobeamertemplate{description item}{\llap\bgroup\usebeamercolor[fg]{section in sidebar}\small}{\kern1.125ex\egroup}
+  \addtobeamertemplate{description item}{\llap\bgroup\usebeamercolor[fg]{section in sidebar}\small}{\kern1.25ex\egroup}
 }
 
 \mode
