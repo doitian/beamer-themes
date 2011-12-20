@@ -1,6 +1,6 @@
 \documentclass[xetex,mathserif,serif,12pt]{beamer}
 
-\usepackage[orientation=landscape,size=custom,width=16,height=9,scale=1]{beamerposter}
+\usepackage[orientation=landscape,size=custom,width=16,height=9,scale=.9]{beamerposter}
 
 \usepackage{ifthen}
 \usepackage{ifpdf}
@@ -26,8 +26,8 @@
 \usepackage{fontspec}
 \usepackage{xunicode}
 \usepackage{xltxtra}
-\setmainfont{Gill Sans}
-\setmonofont[Scale=0.96]{Inconsolata}
+\setmainfont{Ubuntu}
+\setmonofont[Scale=0.92]{Inconsolata}
 
 \title{Cook like a Chef}
 \author{Ian Yang}
@@ -59,25 +59,32 @@
   columns=fixed,
   numbers=left,
   numberstyle=\tiny\color{beamer@solarized@base01},
-  numbersep=5pt,
+  numbersep=4pt,
   tabsize=2,
   extendedchars=true,
   breaklines=true,
-  frame=single,
-  showspaces=false,
-  showtabs=false,
-  xleftmargin=0pt,
-  framexleftmargin=0pt,
-  framexrightmargin=0pt,
-  framextopmargin=0pt,
-  framexbottommargin=0pt,
-  showstringspaces=false,
+  frame=l,
+  xleftmargin=2pt,
+  framesep=0pt,
+  rulesep=0pt,
+  framerule=.5pt,
+  framexleftmargin=2pt,
+  rulecolor=\color{beamer@solarized@base03},
   basicstyle=\footnotesize\ttfamily,
   keywordstyle=\color{beamer@solarized@green},
   stringstyle=\color{beamer@solarized@cyan}\ttfamily,
   identifierstyle=\color{beamer@solarized@blue},
   commentstyle=\color{beamer@solarized@base01},
   emphstyle=\color{beamer@solarized@red}
+}
+\lstdefinelanguage{JavaScript}{
+  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]"
 }
 
 \begin{frame}
@@ -101,6 +108,7 @@
 \end{frame}
 
 \begin{frame}
+  \begin{beamer@nomargin}
   \begin{figure}
     \centering
     \includegraphics[height=6.5cm]{chefsi}
@@ -108,18 +116,21 @@
         is Chef} from Chef Wiki}
     \label{fig:chefsi}
   \end{figure}
+  \end{beamer@nomargin}
 \end{frame}
 
 \section{How Chef Works}
 \label{sec:how-work}
 
 \begin{frame}
+  \begin{beamer@nomargin}
   \begin{figure}
     \centering
-    \includegraphics[height=5.8cm]{chef-basics-nwc}
+    \includegraphics[height=6.2cm]{chef-basics-nwc}
     \caption{\href{http://wiki.opscode.com/display/chef/Architecture+Introduction}{Arch Intro} from Chef Wiki}
-    \label{fig:chefsi}
+    \label{fig:chef-basices}
   \end{figure}
+  \end{beamer@nomargin}
 \end{frame}
 
 \begin{frame}{Components}
@@ -149,22 +160,121 @@
 
 \begin{frame}[fragile]
   \frametitle{Git Recipe}
-  \begin{beamer@nomargin}
-  \begin{lstlisting}
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
 case node[:platform] # node info
 when "debian", "ubuntu"
-  package "git-core" # package is a resource
+  # package is a resource
+  package "git-core"
 else 
   package "git"
 end
-  \end{lstlisting}  
+    \end{lstlisting}  
   \end{beamer@nomargin}
 \end{frame}
 
 \section{How to Use Chef}
 \label{sec:how-use}
 
-\section{Real Examples}
+\begin{frame}[fragile]
+  \frametitle{Start from Chef Repo}
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}[language=Bash,basicstyle=\large\ttfamily]
+gem install chef
+gh clone opscode chef-repo
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Read existing Cookbooks}
+  \begin{beamer@nomargin}
+    \begin{figure}
+      \centering
+      \includegraphics[height=3.2cm]{chef-community}
+      \caption{Opscode Community\footnote{\url{http://community.opscode.com/}}}
+      \label{fig:community}
+    \end{figure}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Cookbook}
+
+  \begin{definition}
+    Collection of
+    \begin{itemize}[<+->]
+    \item Attributes
+    \item Recipes
+    \item Files \& Templates
+    \item Definitions \& Providers
+    \end{itemize}
+  \end{definition}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Use \texttt{knife}}
+
+  \begin{beamer@nomargin}[example text]
+  \begin{lstlisting}[language=Bash,basicstyle=\small\ttfamily]
+knife cookbook site search nginx
+knife cookbook site install nginx
+knife cookbook site download nginx
+  \end{lstlisting}
+  \end{beamer@nomargin}
+
+  \url{http://wiki.opscode.com/display/chef/Cookbook+Site+Help}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Wait... \texttt{knife} throws errors}
+
+  \begin{itemize}
+  \item Create a \texttt{knife} config in chef repo
+  \item Follow \href{https://gist.github.com/1501318}{gist 1501318}
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Try Chef using \texttt{chef-solo}}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}[language=Bash]
+chef-solo -c config-file -j configuration-data.json
+    \end{lstlisting}
+  \end{beamer@nomargin}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{json sample}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}[language=JavaScript]
+{
+  "rbenv": {
+    "rubies": ["1.9.2-p290"],
+    "gems": ["bundler"]
+  },
+  "run_list": ["recipe[rbenv]",
+               "recipe[nodejs]"]
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+
+\end{frame}
+
+\section{Example}
 \label{sec:ex}
- 
+
+\begin{frame}{cnintridea preview}
+  \begin{itemize}
+  \item Provision vbox using \alert{vagrant}
+  \item Install git, rbenv, ruby, bundler
+  \item Install and config nginx
+  \item Daemonize and monit \texttt{rake watch}
+  \end{itemize}
+\end{frame}
+
 \end{document}
