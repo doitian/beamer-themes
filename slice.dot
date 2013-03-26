@@ -1,0 +1,13 @@
+digraph structs {
+  node [shape=record];
+  array [label="<f0>0|<f1>1|<f2>2|<f3>3|<f4>4|<f5>5|<f6>6|<f7>7|<f8>8|<f9>9"];
+  p [label="p|<from>from:0|<upto>upto:5"];
+  q [label="q := p[3:8]|<from>from:3|<upto>upto:8"];
+  r [label="r := q[0:2]|<from>from:3|<upto>upto:5"];
+  p:from -> array:f0:nw
+  p:upto -> array:f5:nw
+  q:from -> array:f3:nw
+  q:upto -> array:f8:nw
+  array:f3:sw -> r:from [dir=back]
+  array:f5:sw -> r:upto [dir=back]
+}

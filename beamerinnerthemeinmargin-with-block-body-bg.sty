@@ -21,12 +21,21 @@
 
 \newenvironment{beamer@nomargin}[1][block body]{%
   \hskip-.20\paperwidth%
-  \begin{beamercolorbox}[wd=0.9\paperwidth]{#1}%
+  \begin{beamercolorbox}[colsep=.3ex,wd=0.9\paperwidth]{#1}%
     \setlength{\linewidth}{0.88\paperwidth}%
-    \vskip-.9ex%
+    \vskip-1.05ex%
 }{%
-    \vskip-.25ex%
+    \vskip-.4ex%
   \end{beamercolorbox}%
+}
+
+\newenvironment{beamer@nomargin@title}{%
+  \begin{beamer@nomargin}%
+  \vskip0.2ex%
+}{%
+  \vskip0.5ex%
+  \end{beamer@nomargin}%
+  \vskip-.1ex%
 }
 
 \newcommand\beamer@putleft[2]{%

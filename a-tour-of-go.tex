@@ -72,14 +72,14 @@
   columns=fixed,
   numbers=left,
   numberstyle=\tiny\color{beamer@solarized@base01},
-  numbersep=4pt,
+  numbersep=9pt,
   tabsize=2,
   extendedchars=true,
   breaklines=true,
   frame=l,
-  xleftmargin=2pt,
+  xleftmargin=4pt,
   framesep=0pt,
-  rulesep=0pt,
+  rulesep=10pt,
   framerule=.5pt,
   framexleftmargin=2pt,
   rulecolor=\color{beamer@solarized@base03},
@@ -146,7 +146,7 @@ go
   \begin{itemize}[<+->]
   \item All go files in a directory
   \item Do not find files recursively
-  \item All files declares the same \hltexttt{package}
+  \item All files declare the same \hltexttt{package}
   \end{itemize}
 \end{frame}
 
@@ -214,21 +214,531 @@ func main() {
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{If we do not follow the convension}
+  \frametitle{If we do not follow the convention,}
 
-  \hltexttt{example/greeting.go}
-
-  \vskip2ex
+  \begin{beamer@nomargin@title}
+    \texttt{\alert{foo}/greeting.go}
+  \end{beamer@nomargin@title}
 
   \begin{beamer@nomargin}[example text]
     \begin{lstlisting}[basicstyle=\small\ttfamily]
-package foo
+package bar // <-- import path is foo
 import "fmt"
-func hello() {
+func Greeting() {
   fmt.Println("Hello, World")
 }
     \end{lstlisting}
   \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{User will be confused.}
+
+  \begin{beamer@nomargin@title}
+    \texttt{hello/main.go}
+  \end{beamer@nomargin@title}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}[basicstyle=\small\ttfamily]
+package main
+import "foo"
+func main() {
+  bar.Greeting()
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\ttfamily import}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}[basicstyle=\small\ttfamily]
+import "fmt"
+import m "math"
+
+func main() {
+  fmt.Println(m.Pi)
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{in group}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}[basicstyle=\small\ttfamily]
+import (
+  "fmt"
+  "math"
+)
+import (
+  fmt "fmt"
+  m "math"
+)
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}{Exported names}
+  \begin{itemize}
+  \item a name is exported if it begins with a capital letter.
+  \item global \hltexttt{var}, \hltexttt{const}, \hltexttt{type} and
+    \hltexttt{func}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{General Declaration Rules}
+
+  \begin{itemize}
+  \item type after variable
+  \item type is optional if it can be deduced
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\ttfamily func}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+func sum(x int, y int) int {
+  return x + y;
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\texttt{func} Cont.}
+
+  You can omit the type if two or more consecutive parameters share a type.
+  \newline
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+func sum(x, y int) int {
+  return x + y;
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\texttt{func} Multiple results}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+func swap(x, y string) (string, string) {
+  return y, x;
+}
+func main() {
+  x, y := swap("hello", "world")
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Comma \texttt{ok} pattern}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+func main() {
+  m := map[string]string{
+    "foo": "bar"
+  }
+
+  if name, ok := m["name"]; ok {
+    fmt.Println(name)  
+  }
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Comma \texttt{err} pattern}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+import "os"
+import "log"
+
+func main() {
+  file, err := os.Open("file.go")
+  if err != nil {
+    log.Fatal(err)
+  }
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{\texttt{func} Named results}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+func Sqrt(f float64) (result float64, err error) {
+  if f < 0 {
+    err = ...
+  } else {
+    result = ...
+  }
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Variables}
+
+  The \hltexttt{var} statement declares a list of variables.
+  \newline
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+var a, b, c int
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Variables Cont.}
+
+  Cross multiple lines
+  \newline
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+var (
+  a int
+  b string
+)
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Variables initializer}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+var x, y, z = true, "foo", 3.14
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Variables initializer Cont.}
+
+  Cross multiple lines
+  \newline
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+var (
+	a int = 10
+	b     = "foo"
+)
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Short Assignment}
+
+  \alert{Inside function}, \hltexttt{:=} short assignment statement can
+  be used in place of \hltexttt{var} with implicit type.
+  \newline
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+func main() {
+  a, b, c := "foo", true, 3.14
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Variables Scope}
+
+  \begin{itemize}
+  \item block scope
+  \item parameters and named results are in the scope of function block
+  \item \hltexttt{var}, \hltexttt{:=} hide the variable in parent scope
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+
+  \frametitle{Primitive Types}
+
+  \begin{itemize}
+  \item \hltexttt{bool}
+  \item \hltexttt{string}
+  \item
+    \hltexttt{int}  \hltexttt{int8}  \hltexttt{int16}  \hltexttt{int32}  \hltexttt{int64}\newline
+    \hltexttt{uint} \hltexttt{uint8} \hltexttt{uint16} \hltexttt{uint32} \hltexttt{uint64}\newline
+    \hltexttt{uintptr}
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+  \frametitle{Primitive Types Cont.}
+
+  \begin{itemize}
+  \item \hltexttt{byte} alias of \hltexttt{uint8}
+  \item \hltexttt{rune} Unicode code, alias of \hltexttt{int32}
+  \item \hltexttt{float32} \hltexttt{float64}
+  \item \hltexttt{complex64} \hltexttt{complex128}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Constants}
+
+  \begin{itemize}
+  \item like \hltexttt{var}, but use \hltexttt{const}
+  \item character, string, boolean, or numeric values.
+  \end{itemize}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+const Pi = 3.14
+func main() {
+  const World = "world"
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\ttfamily for}
+
+  \begin{itemize}
+  \item no \hltexttt{(} \hltexttt{)}
+  \item \hltexttt{\}} \hltexttt{\}} are required
+  \end{itemize}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+sum := 0
+for i := 1; i <= 10; i++ {
+  sum += i
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\texttt{for} Pitfalls}
+
+  \begin{itemize}
+  \item There is no comma operator
+  \item \hltexttt{++} and \hltexttt{--} are statements
+  \end{itemize}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+for a,b := 0,0; a<10; a,b = a+1,b+1 {
+  ...
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\texttt{for} is \texttt{while}}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+sum, i := 0, 1
+for i <= 10 {
+  sum += i
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\texttt{forever}}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+for {
+  serve(<-req)
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\ttfamily if}
+
+  \vskip-1ex
+  \begin{itemize}
+  \item no \hltexttt{(} \hltexttt{)}
+  \item \hltexttt{\{} \hltexttt{\}} are required
+  \end{itemize}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+func abs(x int) int {
+  if x < 0 {
+    return -x
+  }
+  return x
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\texttt{if} initializer}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+if name, err := m["name"]; ok {
+  fmt.Println(name)
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+
+  Variable declared in initializer is visible in all branches
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\texttt{struct}}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+type Vertex struct {
+    X int
+    Y int
+}
+var origin = Vertex{0, 0}
+var xUnit = Vertex{X:1}
+var yUnit = Vertex{Y:1}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\texttt{struct} fields}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+type Vertex struct { X, Y int }
+func main() {
+  v := Vertex{100, 200}
+  v.X = 300
+  fmt.Println(v.X, v.Y) // => 300 200
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Pointers}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+type Vertex struct { X, Y int }
+func main() {
+  v := Vertex{100, 200}
+  var p *Vertex = &v
+  p.X = 300
+  fmt.Println(v.X, v.Y) // => 300 200
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\texttt{new}}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+var p *T = new(T)
+p: = new(T)
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Slices}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+p := []int{2, 3, 5, 7, 11, 13}
+
+for i := 0; i < len(p); i++ {
+  fmt.Printf("p[%d] = %d\n", i, p[i])
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Slicing Slices}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+p := []int{2, 3, 5, 7, 11, 13}
+p[1:4] // => [3,5,7]
+p[1:]  // => [3,5,7,11,13]
+p[:4]  // => [2,3,5,7]
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Making slice}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+// make([]T, lenth, capability)
+p := make([]int, 0, 10)
+cap(p) // => 10
+len(p) // => 0
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Slicing beyond \texttt{len}}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+p := make([]int, 5, 10)
+p = p[3,8] // len(p)=5,cap(p)=7
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+p := make([]int, 5, 10)
+    \end{lstlisting}
+  \end{beamer@nomargin}
+  \vskip-.1ex
+
+   \begin{beamer@nomargin}
+   \begin{figure}
+     \centering
+     \includegraphics[height=7.35cm]{slice}
+     \label{fig:slice}
+   \end{figure}
+   \end{beamer@nomargin}
+
 \end{frame}
 
 \end{document}
