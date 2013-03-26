@@ -188,6 +188,7 @@ go
 
 \end{frame}
 
+\subsection{Hello World}
 \begin{frame}[fragile]
   \frametitle{Hello World}
 
@@ -298,6 +299,8 @@ import (
 
 \end{frame}
 
+\subsection{Functions}
+
 \begin{frame}[fragile]
   \frametitle{\ttfamily func}
 
@@ -392,6 +395,8 @@ func Sqrt(f float64) (result float64, err error) {
     \end{lstlisting}
   \end{beamer@nomargin}
 \end{frame}
+
+\subsection{Variables}
 
 \begin{frame}[fragile]
   \frametitle{Variables}
@@ -520,6 +525,37 @@ func main() {
 \end{frame}
 
 \begin{frame}[fragile]
+  \frametitle{First class \texttt{func}}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+add = func(x, y int) int {
+  return x + y
+}
+fmt.Println(add(10, 20)) // => 30
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Closure}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+func adder() func(int) int {
+  sum := 0
+  return func(int x) int {
+    sum += x
+    return sum
+  }
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\subsection{Control Statements}
+
+\begin{frame}[fragile]
   \frametitle{\ttfamily for}
 
   \begin{itemize}
@@ -615,6 +651,26 @@ if name, err := m["name"]; ok {
 \end{frame}
 
 \begin{frame}[fragile]
+  \frametitle{Switch}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+switch os := runtime.GOOS; os {
+  case "darwin":
+    fmt.Println("OS X.")
+  case "linux":
+    fmt.Println("Linux.")
+  default:
+    fmt.Printf("%s.", os) // freebsd, ...
+  }
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\subsection{Structs}
+
+\begin{frame}[fragile]
   \frametitle{\texttt{struct}}
 
   \begin{beamer@nomargin}[example text]
@@ -671,6 +727,8 @@ p: = new(T)
     \end{lstlisting}
   \end{beamer@nomargin}
 \end{frame}
+
+\subsection{Slices}
 
 \begin{frame}[fragile]
   \frametitle{Slices}
@@ -738,7 +796,388 @@ p := make([]int, 5, 10)
      \label{fig:slice}
    \end{figure}
    \end{beamer@nomargin}
+\end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\texttt{range}}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+pow := make([]int, 10)
+for i := range pow {
+  pow[i] = 1 << uint(i)
+}
+for _, value := range pow {
+  fmt.Printf("%d\n", value)
+}
+for i, value := range pow {
+  fmt.Printf("pow[%d]=%d\n", i, value)
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\subsection{Maps}
+
+\begin{frame}[fragile]
+  \frametitle{\texttt{map}}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+type Vertex struct {
+  Lat, Long float64
+}
+
+var m = map[string]Vertex{
+  "Bell Labs": Vertex{40.68433, -74.39967},
+  "Google": Vertex{37.42202, -122.08408},
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\texttt{map} Cont.}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+type Vertex struct {
+  Lat, Long float64
+}
+
+var m = map[string]Vertex{
+  "Bell Labs": 40.68433, -74.39967,
+  "Google": 37.42202, -122.08408,
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\texttt{map} functions}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+m[key] = value
+elem = m[key]
+delete(m, key)
+elem, ok = m[key]
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\subsection{Methods}
+
+\begin{frame}[fragile]
+  \frametitle{Methods}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+type Vertex struct{ X, Y float64 }
+func (v *Vertex) double() {
+  v.X, v.Y = v.X*2, v.Y*2
+}
+
+func main() {
+  v := &Vertex{1, 2}
+  v.double() // => &Vertex{2,4}
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Revisit Pointer}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+type Vertex struct{ X, Y float64 }
+func (v Vertex) double() {
+  v.X, v.Y = v.X*2, v.Y*2
+}
+
+func main() {
+  v := &Vertex{1, 2}
+  v.double() // => &Vertex{1,2}
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Revisit Pointer Cont.}
+
+  \begin{itemize}
+  \item You can pass pointer when value is required
+  \item You can pass value when pointer is required only as method receiver (maybe a bug)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Methods Cont.}
+
+  \begin{itemize}
+  \item In fact, you can define a method on any type you define in your package, not just \hltexttt{struct}s.
+  \item You cannot define a method on a type from another package, or on a basic type.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Methods Cont.}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+type SqrtError float64
+
+func (err SqrtError) Error() string {
+  return fmt.Sprintf("Sqrt: %v is nagative", float64(err))
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\subsection{Interfaces}
+
+\begin{frame}
+  \frametitle{Interfaces}
+
+  \begin{itemize}
+  \item An interface type is defined by a set of methods.
+  \item A value of interface type can hold any value that implements those methods.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Interfaces}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+type error interface {
+  Error() string
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Interfaces}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+type SqrtError float64
+func (err *SqrtError) Error() string {
+	return fmt.Sprintf("Sqrt: %v is nagative", float64(*err))
+}
+var err = SqrtError(3)
+var x error = 1 // => type error
+var y error = err // => type error
+var z error = &err // => OK
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Interfaces and Pointer}
+
+  \begin{itemize}
+  \item Methods defined on value is considered defined on pointer as well
+  \item Methods defined on pointer is not defined on value
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Interfaces and Pointer}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+type SqrtError float64
+func (err SqrtError) Error() string {
+	return fmt.Sprintf("Sqrt: %v is nagative", float64(err))
+}
+var err = SqrtError(3)
+var x error = 1 // => type error
+var y error = err // => OK
+var z error = &err // => OK
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Interfaces Union}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+type ReadWriter interface {
+    Reader
+    Writer
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Embedding}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+type Job struct {
+  Command string
+  *log.Logger
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+
+  \hltexttt{Job} has all methods defined on \hltexttt{log.Logger}.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Embedding}
+  Last part of the type name is defined as implicit field name
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+func main() {
+  job := Job{Logger: log.New(os.Stderr, "Job: ", log.Ldate)}
+
+  fmt.Println(job)
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\subsection{Concurrency}
+
+\begin{frame}[fragile]
+  \frametitle{Goroutines}
+
+  A goroutine is a lightweight thread 
+  \newline
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+go f(x, y, z)
+    \end{lstlisting}
+  \end{beamer@nomargin}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Channels}
+
+  Channels are a typed conduit through which you can send and receive values
+  with the channel operator, \hltexttt{<-}.\newline
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+ch <- v   // send v to channel
+v := <-ch // receive from ch, and assign to v
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Makeing Channels}
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+ch := make(chan int)
+queue = make(chan *Request)
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Channels Blocking}
+
+  \begin{itemize}
+  \item sender is blocked until data is read by receiver
+  \item receiver is blocked until data is placed by sender
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Buffered Channels}
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+ch := make(chan int, 10)
+queue = make(chan *Request, 100)
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Buffered Channels Blocking}
+
+  \begin{itemize}
+  \item sender is blocked when buffer is full
+  \item receiver is blocked when buffer is empty
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+func worker(a []int, ch chan int) {
+  result := sum(a)
+  ch <- result
+}
+
+func main() {
+  ch := make(chan int)
+  go worker([]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, ch)
+
+  fmt.Println(<-ch) // => 3
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\ttfamily select}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+select {
+case c <- x:
+  x, y = y, x+y
+case <-quit:
+  fmt.Println("quit")
+  return
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{non-blocking {\ttfamily select}}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+select {
+case c <- x:
+  x, y = y, x+y
+case <-quit:
+  fmt.Println("quit")
+  return
+default:
+  time.Sleep(5e7)
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\section{Continue Reading}
+
+\begin{frame}{Continue Reading}
+  \begin{itemize}
+  \item \href{http://golang.org/doc/effective_go.html}{Effective Go}
+  \item \href{http://golang.org/doc/articles/defer_panic_recover.html}{Defer,
+      Panic, and Recover} (similar to exception)
+  \item
+    \href{http://golang.org/doc/articles/concurrency_patterns.html}{Concurrency
+      Patterns}
+  \item \href{http://golang.org/pkg/}{Packages Reference}
+\end{itemize}
 \end{frame}
 
 \end{document}
