@@ -1,0 +1,234 @@
+\documentclass[xetex,mathserif,serif,12pt]{beamer}
+
+\usepackage[orientation=landscape,size=custom,width=16,height=9,scale=.9]{beamerposter}
+
+\usepackage{ifthen}
+\usepackage{ifpdf}
+\ifpdf
+\usepackage{epstopdf}
+\fi
+\DeclareGraphicsExtensions{.mps,.eps,.png}
+
+\usetheme{iywide}
+\setbeamerfont{section in toc}{parent=structure,size=\small}
+\setbeamerfont{subsection in toc}{parent=structure,size=\tiny}
+
+\usepackage{hyperref}
+
+\hypersetup{
+  colorlinks,%
+  citecolor=beamer@solarized@blue,%
+  filecolor=beamer@solarized@blue,%
+  linkcolor=beamer@solarized@blue,%
+  urlcolor=beamer@solarized@blue%
+}
+
+\usepackage{fontspec}
+\usepackage{xunicode}
+\usepackage{xltxtra}
+\setmainfont{Ubuntu}
+\setmonofont[Scale=0.92]{Inconsolata}
+
+\usepackage[absolute,overlay]{textpos}
+\setlength{\TPHorizModule}{1pt}
+\setlength{\TPVertModule}{1pt}
+
+\title{A Tour of Go}
+\author{Ian Yang}
+\institute{Intridea Inc.}
+
+\AtBeginSection[]
+{
+  \begin{frame}{Outline}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\usepackage{bibentry}
+\nobibliography*
+\def\newblock{}
+
+\usepackage{ctable}
+\setlength{\heavyrulewidth}{0.1em}
+\newcommand{\otoprule}{\midrule[\heavyrulewidth]}
+
+\usepackage{textcomp}
+\usepackage{listings}
+
+\begin{document}
+
+\lstdefinelanguage{Go}{
+  keywords={type, func, return, defer, go, import, package, var, const, chan, range},
+  ndkeywords={len, cap, panic, make},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]"
+}
+\lstset{
+  language=Go,
+  upquote=true,
+  columns=fixed,
+  numbers=left,
+  numberstyle=\tiny\color{beamer@solarized@base01},
+  numbersep=4pt,
+  tabsize=2,
+  extendedchars=true,
+  breaklines=true,
+  frame=l,
+  xleftmargin=2pt,
+  framesep=0pt,
+  rulesep=0pt,
+  framerule=.5pt,
+  framexleftmargin=2pt,
+  rulecolor=\color{beamer@solarized@base03},
+  basicstyle=\footnotesize\ttfamily,
+  keywordstyle=\color{beamer@solarized@green},
+  stringstyle=\color{beamer@solarized@cyan}\ttfamily,
+  identifierstyle=\color{beamer@solarized@blue},
+  commentstyle=\color{beamer@solarized@base01},
+  emphstyle=\color{beamer@solarized@red}
+}
+
+\newcommand{\hltexttt}[1]{\texttt{\color{beamer@solarized@yellow}#1}}
+
+\begin{frame}
+  \titlepage
+  \begin{textblock}{200}(320,220)
+    \includegraphics{go}
+  \end{textblock}
+\end{frame}
+
+\section*{Contents}
+\begin{frame}{Contents}
+  \usebeamerfont{section in toc}
+  \tableofcontents
+\end{frame}
+
+\section{How to Write Go Code}
+\label{sec:how-to-code}
+
+\begin{frame}{How to Write Go Code}
+
+  {\large \href{http://golang.org/doc/code.html}{golang.org/doc/code.html}}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\ttfamily GOPATH}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}[language=Bash]
+mkdir -p ~/go/src
+export GOPATH=~/go
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Directory Structure}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}[language=,basicstyle=\small\ttfamily]
+go
+|- bin
+|  `- hello
+|- src
+|  `- github.com/doitian/studygo
+`- pkg
+   `- linux_amd64/github.com/doitian/studygo
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}{Go Package}
+  \begin{itemize}[<+->]
+  \item All go files in a directory
+  \item Do not find files recursively
+  \item All files declares the same \hltexttt{package}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Package Search}
+  \begin{itemize}[<+->]
+  \item Search by import path
+  \item Import path is relative directory path
+  \item Search paths in \hltexttt{GOPATH} one by one
+  \item \hltexttt{pkg} first, then \hltexttt{src}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Executables}
+  \begin{itemize}[<+->]
+  \item A package that declares \hltexttt{package main}
+  \item Installed into \hltexttt{bin}
+  \item Run \hltexttt{func main}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Toolkits}
+  \begin{itemize}[<+->]
+  \item \hltexttt{go build} compile package
+  \item \hltexttt{go install} compile and install
+  \item \hltexttt{go test} run tests in \hltexttt{*\_test.go}
+  \end{itemize}
+\end{frame}
+
+\section{A Tour of Go}
+\label{sec:tour}
+
+\begin{frame}{A Tour of Go}
+
+  Let's rock with the online tour
+
+  \vskip2ex
+
+  {\LARGE \href{http://tour.golang.org}{tour.golang.org}}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Hello World}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}[basicstyle=\small\ttfamily]
+package main
+
+import "fmt"
+
+func main() {
+  fmt.Println("Hello, World")
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}{\ttfamily package}
+  \begin{itemize}
+  \item Only package \hltexttt{main} is executable
+  \item Must be the same in directory
+  \item Default name when \hltexttt{import}ed
+  \item Convention: same with the last element of the import path
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{If we do not follow the convension}
+
+  \hltexttt{example/greeting.go}
+
+  \vskip2ex
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}[basicstyle=\small\ttfamily]
+package foo
+import "fmt"
+func hello() {
+  fmt.Println("Hello, World")
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\end{document}
