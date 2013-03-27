@@ -43,6 +43,12 @@
     \tableofcontents[currentsection]
   \end{frame}
 }
+\AtBeginSubsection[]
+{
+  \begin{frame}{Outline}
+    \tableofcontents[currentsubsection]
+  \end{frame}
+}
 
 \usepackage{bibentry}
 \nobibliography*
@@ -159,7 +165,7 @@ go
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Executables}
+\begin{frame}{Executable}
   \begin{itemize}[<+->]
   \item A package that declares \hltexttt{package main}
   \item Installed into \hltexttt{bin}
@@ -167,11 +173,13 @@ go
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Toolkits}
+\begin{frame}{Toolkit}
   \begin{itemize}[<+->]
   \item \hltexttt{go build} compile package
   \item \hltexttt{go install} compile and install
   \item \hltexttt{go test} run tests in \hltexttt{*\_test.go}
+  \item \hltexttt{go get} install remote packages
+  \item \hltexttt{go help} manual
   \end{itemize}
 \end{frame}
 
@@ -344,7 +352,7 @@ func main() {
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Comma \texttt{ok} pattern}
+  \frametitle{Comma \texttt{OK} pattern}
 
   \begin{beamer@nomargin}[example text]
     \begin{lstlisting}
@@ -391,6 +399,7 @@ func Sqrt(f float64) (result float64, err error) {
   } else {
     result = ...
   }
+  return
 }
     \end{lstlisting}
   \end{beamer@nomargin}
@@ -446,8 +455,8 @@ var x, y, z = true, "foo", 3.14
   \begin{beamer@nomargin}[example text]
     \begin{lstlisting}
 var (
-	a int = 10
-	b     = "foo"
+  a int = 10
+  b     = "foo"
 )
     \end{lstlisting}
   \end{beamer@nomargin}
@@ -456,7 +465,7 @@ var (
 \begin{frame}[fragile]
   \frametitle{Short Assignment}
 
-  \alert{Inside function}, \hltexttt{:=} short assignment statement can
+  \alert{Inside function}, \hltexttt{:=} short assignment can
   be used in place of \hltexttt{var} with implicit type.
   \newline
 
@@ -469,11 +478,29 @@ func main() {
   \end{beamer@nomargin}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Short Assignment}
+
+  At least one variable is newly declared in current scope
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+func parse(path string) (config map[sring]sring, err error) {
+  file, err := os.Open(path)
+  data := make([]byte, 100)
+  count, err := file.Read(data)
+  ...
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+
 \begin{frame}
   \frametitle{Variables Scope}
 
   \begin{itemize}
-  \item block scope
+  \item block scope (except \hltexttt{if})
   \item parameters and named results are in the scope of function block
   \item \hltexttt{var}, \hltexttt{:=} hide the variable in parent scope
   \end{itemize}
@@ -560,7 +587,7 @@ func adder() func(int) int {
 
   \begin{itemize}
   \item no \hltexttt{(} \hltexttt{)}
-  \item \hltexttt{\}} \hltexttt{\}} are required
+  \item \hltexttt{\{} \hltexttt{\}} are required
   \end{itemize}
 
   \begin{beamer@nomargin}[example text]
@@ -668,7 +695,7 @@ switch os := runtime.GOOS; os {
   \end{beamer@nomargin}
 \end{frame}
 
-\subsection{Structs}
+\subsection{Data Structures}
 
 \begin{frame}[fragile]
   \frametitle{\texttt{struct}}
@@ -676,8 +703,8 @@ switch os := runtime.GOOS; os {
   \begin{beamer@nomargin}[example text]
     \begin{lstlisting}
 type Vertex struct {
-    X int
-    Y int
+  X int
+  Y int
 }
 var origin = Vertex{0, 0}
 var xUnit = Vertex{X:1}
@@ -727,8 +754,6 @@ p: = new(T)
     \end{lstlisting}
   \end{beamer@nomargin}
 \end{frame}
-
-\subsection{Slices}
 
 \begin{frame}[fragile]
   \frametitle{Slices}
@@ -799,25 +824,60 @@ p := make([]int, 5, 10)
 \end{frame}
 
 \begin{frame}[fragile]
+\frametitle{\hltexttt{append}}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+func append(slice []Type, elems ...Type) []Type
+    \end{lstlisting}
+  \end{beamer@nomargin}
+
+  \begin{itemize}
+  \item Slice the slice if capability is enough,
+  \item otherwise allocate a new array.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{\hltexttt{append}}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+slice = append(slice, elem1, elem2)
+slice = append(slice, anotherSlice...)
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
+
+\begin{frame}[fragile]
   \frametitle{\texttt{range}}
 
   \begin{beamer@nomargin}[example text]
     \begin{lstlisting}
-pow := make([]int, 10)
-for i := range pow {
-  pow[i] = 1 << uint(i)
-}
-for _, value := range pow {
-  fmt.Printf("%d\n", value)
-}
+prime := []int{2,3,5,7,11,13}
 for i, value := range pow {
-  fmt.Printf("pow[%d]=%d\n", i, value)
+  fmt.Printf("prime[%d]=%d\n", i, value)
 }
     \end{lstlisting}
   \end{beamer@nomargin}
 \end{frame}
 
-\subsection{Maps}
+
+\begin{frame}[fragile]
+  \frametitle{\texttt{range}}
+
+  \begin{beamer@nomargin}[example text]
+    \begin{lstlisting}
+pow := make([]int, 10)
+for i := range pow { // only key
+  pow[i] = 1 << uint(i)
+}
+for _, value := range pow { // only value
+  fmt.Printf("%d\n", value)
+}
+    \end{lstlisting}
+  \end{beamer@nomargin}
+\end{frame}
 
 \begin{frame}[fragile]
   \frametitle{\texttt{map}}
@@ -841,13 +901,12 @@ var m = map[string]Vertex{
 
   \begin{beamer@nomargin}[example text]
     \begin{lstlisting}
-type Vertex struct {
-  Lat, Long float64
-}
-
 var m = map[string]Vertex{
-  "Bell Labs": 40.68433, -74.39967,
-  "Google": 37.42202, -122.08408,
+  "Bell Labs": {
+    Lat: 40.68433,
+    Long: -74.39967,
+  },
+  "Google": {37.42202, -122.08408},
 }
     \end{lstlisting}
   \end{beamer@nomargin}
@@ -866,7 +925,7 @@ elem, ok = m[key]
   \end{beamer@nomargin}
 \end{frame}
 
-\subsection{Methods}
+\subsection{Methods and Interfaces}
 
 \begin{frame}[fragile]
   \frametitle{Methods}
@@ -932,11 +991,11 @@ type SqrtError float64
 func (err SqrtError) Error() string {
   return fmt.Sprintf("Sqrt: %v is nagative", float64(err))
 }
+
+var err = SqrtError(-64)
     \end{lstlisting}
   \end{beamer@nomargin}
 \end{frame}
-
-\subsection{Interfaces}
 
 \begin{frame}
   \frametitle{Interfaces}
@@ -1077,7 +1136,7 @@ v := <-ch // receive from ch, and assign to v
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Makeing Channels}
+  \frametitle{Making Channels}
   \begin{beamer@nomargin}[example text]
     \begin{lstlisting}
 ch := make(chan int)
@@ -1181,3 +1240,5 @@ default:
 \end{frame}
 
 \end{document}
+
+%  LocalWords:  initializer
